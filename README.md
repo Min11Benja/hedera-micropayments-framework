@@ -153,12 +153,12 @@ npm run dev
 
 ```
 hedera-micropayments-framework/
-├── backend/                 # Core payment engine
+├── server/                 # Core payment engine
 │   ├── hcs/                # Hedera Consensus Service integration
 │   ├── settlement/         # Batch payment processor
 │   ├── x402/              # Payment challenge middleware
 │   └── examples/           # Use case implementations
-├── frontend/               # Demo applications
+├── client/                 # Demo applications
 │   ├── video-player/       # Streaming demo
 │   ├── dashboard/          # Creator interface
 │   └── wallet-demo/        # Payment flow examples
@@ -167,6 +167,7 @@ hedera-micropayments-framework/
 │   ├── sequence-diagrams/
 │   ├── api-reference.md
 │   └── whitepaper-draft.md
+├── chunks/                 # Payment chunks
 ├── tests/                  # Test suites
 └── scripts/               # Deployment & utility scripts
 ```
@@ -202,6 +203,39 @@ We welcome contributions! This is an **open experiment** meant to grow through c
 5. **Test & Report** - Find bugs, suggest improvements
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+
+### 📝 Commit Message Guidelines
+
+We follow a strict commit message format to ensure history is readable and easy to scan.
+
+**Format:** `<type>(<scope>): <short summary>`
+
+**Types:**
+- `feat`: A new feature
+- `fix`: A bug fix
+- `docs`: Documentation only changes
+- `style`: Changes that do not affect the meaning of the code (white-space, formatting, etc)
+- `refactor`: A code change that neither fixes a bug nor adds a feature
+- `perf`: A code change that improves performance
+- `test`: Adding missing tests or correcting existing tests
+- `chore`: Changes to the build process or auxiliary tools and libraries like documentation generation
+
+**Example:** `feat(auth): implement login with wallet`
+
+### 🌿 Branch Naming Convention
+
+Please use the following convention for branch names:
+`type/scope/short-description`
+
+**Examples:**
+- `feat/user-auth/add-login`
+- `fix/payment-engine/rounding-error`
+- `docs/readme/update-setup-guide`
+
+You can use the provided commit template:
+```bash
+git config commit.template .github/COMMIT_TEMPLATE.md
+```
 
 ---
 
