@@ -118,6 +118,8 @@ window.checkAccess = async () => {
     }
 };
 
+let accessToken: string | null = null;
+
 window.payAccess = async () => {
     try {
         const res = await fetch('/api/pay', {
@@ -126,7 +128,8 @@ window.payAccess = async () => {
             body: JSON.stringify({ proof: 'simulated-proof' })
         });
         const data: PayResponse = await res.json();
-        if (data.success) {
+        if (data.success && data.access_token) {
+            accessToken = data.access_token;
             log('accessStatus', `✅ Unlocked! Token: ${data.access_token}\n"${data.message}"`);
         } else {
             log('accessStatus', '❌ Failed: ' + data.error);
@@ -141,6 +144,12 @@ let watchInterval: NodeJS.Timeout | null = null;
 
 window.startWatching = async () => {
     if (isWatching) return;
+
+    if (!accessToken) {
+        appendLog('eventLog', '⚠️ Access Denied: You must "Pay & Unlock" first.');
+        return;
+    }
+
     isWatching = true;
     appendLog('eventLog', '--- Stream Started ---');
 
@@ -148,7 +157,10 @@ window.startWatching = async () => {
         try {
             const res = await fetch('/api/event', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`
+                },
                 body: JSON.stringify({
                     eventType: 'watch',
                     contentId: 'video-demo-1',
@@ -158,9 +170,15 @@ window.startWatching = async () => {
             const data: EventResponse = await res.json();
             if (data.success) {
                 appendLog('eventLog', `[${new Date().toLocaleTimeString()}] 📡 Logged to Topic ${data.topicId} (Status: ${data.status})`);
+            } else if (data.error) {
+                appendLog('eventLog', `❌ Error: ${data.error}`);
+                clearInterval(watchInterval!); // Stop polling
+                isWatching = false;
             }
-        } catch (err) {
-            console.error(err);
+        } catch (err: any) {
+            appendLog('eventLog', `❌ Network Error: ${err.message}`);
+            clearInterval(watchInterval!);
+            isWatching = false;
         }
     }, 1000);
 };

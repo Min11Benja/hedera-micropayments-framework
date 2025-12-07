@@ -11,6 +11,10 @@ export function getClient(): Client {
         throw new Error("HEDERA_ACCOUNT_ID and HEDERA_PRIVATE_KEY must be present in .env");
     }
 
+    if (process.env.HEDERA_ACCOUNT_ID === '0.0.xxxxx' || process.env.HEDERA_PRIVATE_KEY.includes('302e0201')) {
+        throw new Error("You are using default placeholder credentials in .env! Please open .env and replace '0.0.xxxxx' with your actual Hedera Testnet Account ID and Private Key.");
+    }
+
     const accountId = AccountId.fromString(process.env.HEDERA_ACCOUNT_ID);
     const privateKey = PrivateKey.fromString(process.env.HEDERA_PRIVATE_KEY);
 
