@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hedera Micropayments Demo - Phase 1</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 800px; margin: 0 auto; padding: 2rem; line-height: 1.5; background: #f4f4f4; }
+        .hero { text-align: center; margin-bottom: 2rem; }
+        .card { background: white; padding: 1.5rem; margin: 1rem 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .hidden { display: none; }
+        
+        label { display: block; margin-top: 1rem; font-weight: bold; }
+        input { width: 100%; padding: 0.5rem; margin-top: 0.5rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { background: #007bff; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; margin-top: 1rem; font-size: 1rem; }
+        button:hover { background: #0056b3; }
+        button.secondary { background: #6c757d; }
+        
+        pre { background: #333; color: #0f0; padding: 1rem; border-radius: 4px; overflow-x: auto; font-size: 0.9rem; margin-top: 1rem;}
+        .status { margin-top: 0.5rem; font-weight: bold; }
+        .error { color: red; }
+        .success { color: green; }
+        .warning { background: #fff3cd; color: #856404; padding: 0.5rem; border-radius: 4px; margin-top: 1rem; font-size: 0.9rem; }
+        .back-link { display: block; margin-bottom: 1rem; color: #666; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link">← Back to Roadmap</a>
+
+    <div class="hero">
+        <h1>Phase 1: Minimal Primitives</h1>
+        <p>Hedera Micropayment Framework Core</p>
+    </div>
+    
+    <!-- Step 1: Setup -->
+    <div id="step1" class="card">
+        <h2>1. Verification & Setup</h2>
+        <p>Enter your Hedera Testnet credentials to verify access before starting.</p>
+        
+        <label>Account ID</label>
+        <input type="text" id="accountId" placeholder="0.0.xxxxx">
+        
+        <label>Private Key (DER Encoded)</label>
+        <input type="password" id="privateKey" placeholder="302e...">
+        
+        <div class="warning">⚠️ Keys are sent to your local server only. Use Testnet keys.</div>
+        
+        <button onclick="verifyCredentials()">Verify & Start</button>
+        <div id="verifyStatus" class="status"></div>
+    </div>
+
+    <!-- Step 2: Dashboard (Initially Hidden) -->
+    <div id="step2" class="hidden">
+        <div class="card">
+            <h3>1. Content Access (x402)</h3>
+            <button onclick="checkAccess()" class="secondary">Request Access (GET /pay)</button>
+            <button onclick="payAccess()">Pay & Unlock (POST /pay)</button>
+            <pre id="accessStatus">Locked 🔒</pre>
+        </div>
+
+        <div class="card">
+            <h3>2. Watch Events (HCS)</h3>
+            <button onclick="startWatching()">Start Watching (Simulate)</button>
+            <button onclick="stopWatching()" class="secondary">Stop Watching</button>
+            <pre id="eventLog">Event Log:
+Waiting...</pre>
+        </div>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
