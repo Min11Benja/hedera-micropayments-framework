@@ -1,0 +1,41 @@
+{
+    "name": "hedera-micropayments-framework",
+    "version": "0.1.0",
+    "description": "A minimal, open-source toolkit for real-time micro-transactions on Hedera",
+    "main": "dist/index.js",
+    "scripts": {
+        "start": "node dist/index.js",
+        "dev": "ts-node server/index.ts",
+        "build": "tsc",
+        "lint": "eslint server/**/*.ts",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "hedera",
+        "micropayments",
+        "blockchain",
+        "payment-framework"
+    ],
+    "author": "min11benja",
+    "license": "MIT",
+    "dependencies": {
+        "@hashgraph/sdk": "^2.78.0",
+        "body-parser": "^2.2.1",
+        "cors": "^2.8.5",
+        "dotenv": "^16.3.1",
+        "express": "^4.18.2"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.39.1",
+        "@types/body-parser": "^1.19.6",
+        "@types/cors": "^2.8.19",
+        "@types/express": "^5.0.6",
+        "@types/node": "^24.10.1",
+        "@typescript-eslint/eslint-plugin": "^8.48.1",
+        "@typescript-eslint/parser": "^8.48.1",
+        "eslint": "^9.39.1",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.9.3",
+        "typescript-eslint": "^8.48.1"
+    }
+}
