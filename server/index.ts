@@ -17,12 +17,13 @@ app.use(bodyParser.json());
 // API Routes
 app.use('/api', apiRoutes);
 
-// Serve static files from the client directory
-app.use(express.static(path.join(__dirname, '../client')));
-
-// Fallback to index.html
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/index.html'));
+// Basic root route
+app.get('/', (req, res) => {
+    res.send(`
+        <h1>Backend Running 🚀</h1>
+        <p>This is the API Server.</p>
+        <p>Please access the Frontend at: <a href="http://localhost:5173">http://localhost:5173</a></p>
+    `);
 });
 
 app.listen(PORT, () => {
