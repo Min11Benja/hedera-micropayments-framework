@@ -1,0 +1,23 @@
+{
+    "name": "hedera-micropayments-framework",
+    "version": "0.1.0",
+    "description": "A minimal, open-source toolkit for real-time micro-transactions on Hedera",
+    "main": "server/index.js",
+    "scripts": {
+        "start": "node server/index.js",
+        "dev": "node server/index.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "hedera",
+        "micropayments",
+        "blockchain",
+        "payment-framework"
+    ],
+    "author": "min11benja",
+    "license": "MIT",
+    "dependencies": {
+        "dotenv": "^16.3.1",
+        "express": "^4.18.2"
+    }
+}
