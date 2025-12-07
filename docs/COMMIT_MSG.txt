@@ -1,0 +1,13 @@
+feat(phase-1): finalize phase 1 primitives and ui
+
+Types: feat
+Scope: phase-1
+Summary: Finalize Phase 1 primitives, TS migration, and UI enhancements
+
+Describe the changes made in this commit:
+- Migrated server to TypeScript.
+- Implemented x402 Payment Required primitive.
+- Implemented HCS Event Logging primitive with settlement worker stub.
+- Added UI Credential Verification (Step 1) and Dashboard (Step 2).
+- Added 'Stop Watching' feature.
+- precise detailed verification guide and scripts.

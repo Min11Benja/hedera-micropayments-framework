@@ -1,7 +1,40 @@
 import express, { Request, Response, NextFunction } from 'express';
+import { Client, PrivateKey, AccountId, AccountBalanceQuery } from "@hashgraph/sdk";
 import { createTopic, submitMessage } from './hcs/hcsService';
 
 const router = express.Router();
+
+// POST /api/verify
+// Verifies Hedera credentials
+router.post('/verify', async (req: Request, res: Response) => {
+    try {
+        console.log("Received /api/verify request");
+        const { accountId, privateKey } = req.body;
+        console.log("Payload:", { accountId, hasKey: !!privateKey });
+
+        if (!accountId || !privateKey) {
+            console.log("Missing credentials");
+            res.status(400).json({ error: "Missing Account ID or Private Key" });
+            return;
+        }
+
+        console.log("Initializing Client...");
+        const client = Client.forTestnet();
+        client.setOperator(AccountId.fromString(accountId), PrivateKey.fromString(privateKey));
+
+        console.log("Querying balance...");
+        const balance = await new AccountBalanceQuery()
+            .setAccountId(AccountId.fromString(accountId))
+            .execute(client);
+
+        console.log("Balance received:", balance.hbars.toString());
+
+        res.json({ success: true, balance: balance.hbars.toString() });
+    } catch (error: any) {
+        console.error("Verification failed:", error.message);
+        res.status(401).json({ success: false, error: error.message || "Invalid Credentials" });
+    }
+});
 
 // In-memory store for demo purposes
 let topicId: string | null = process.env.TOPIC_ID || null;
