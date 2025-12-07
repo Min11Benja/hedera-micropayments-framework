@@ -153,21 +153,23 @@ npm run dev
 
 ```
 hedera-micropayments-framework/
-├── server/                 # Core payment engine
+├── server/                 # TypeScript Express API
+│   ├── index.ts            # Entry point
+│   ├── routes.ts           # API Endpoints (Verify, Pay, Event)
 │   ├── hcs/                # Hedera Consensus Service integration
-│   ├── settlement/         # Batch payment processor
-│   ├── x402/              # Payment challenge middleware
-│   └── examples/           # Use case implementations
-├── client/                 # Demo applications
-│   ├── video-player/       # Streaming demo
-│   ├── dashboard/          # Creator interface
-│   └── wallet-demo/        # Payment flow examples
+│   └── settlement/         # Batch payment processor
+├── client/                 # Vite + TypeScript Frontend
+│   ├── index.html          # Vertical Timeline Roadmap (Landing)
+│   ├── phase-1.html        # Phase 1 Demo (Primitives)
+│   ├── src/                # TypeScript Source
+│   │   └── main.ts         # Authentication & Payment Logic
+│   ├── vite.config.ts      # Vite Configuration
+│   └── tsconfig.json       # TypeScript Configuration
 ├── docs/                   # Comprehensive documentation
 │   ├── architecture.md
 │   ├── sequence-diagrams/
 │   ├── api-reference.md
 │   └── whitepaper-draft.md
-├── chunks/                 # Payment chunks
 ├── tests/                  # Test suites
 └── scripts/               # Deployment & utility scripts
 ```

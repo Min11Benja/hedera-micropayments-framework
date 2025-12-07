@@ -46,17 +46,38 @@ async function ensureTopic(req: Request, res: Response, next: NextFunction) {
             console.log('Creating new HCS Topic...');
             topicId = await createTopic();
             console.log('Topic created:', topicId);
-        } catch (error) {
+        } catch (error: any) {
             console.error('Failed to create topic:', error);
-            res.status(500).json({ error: 'Failed to initialize HCS topic' });
+            const msg = error.message.includes('HEDERA_ACCOUNT_ID')
+                ? "Server Missing Credentials: The server needs its own Account ID/Key in .env to create HCS Topics (which costs HBAR). Please configure .env."
+                : 'Failed to initialize HCS topic';
+            res.status(500).json({ error: msg });
             return;
         }
     }
     next();
 }
 
+// Middleware to check for access token
+const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+
+    if (!token) {
+        res.status(401).json({ error: "Unauthorized: Missing Access Token. Please 'Pay & Unlock' first." });
+        return;
+    }
+
+    if (token !== 'valid-token-123') { // Simple demo validation
+        res.status(403).json({ error: "Forbidden: Invalid Access Token" });
+        return;
+    }
+
+    next();
+};
+
 // POST /api/event
-router.post('/event', ensureTopic, async (req: Request, res: Response) => {
+router.post('/event', authenticateToken, ensureTopic, async (req: Request, res: Response) => {
     try {
         const { eventType, contentId, timestamp } = req.body;
 
