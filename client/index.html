@@ -13,22 +13,96 @@
 <body>
     <div class="hero">
         <h1>🚀 Hedera Micropayments Framework</h1>
-        <p>Phase 0: Foundation Complete</p>
-        <p>Status: <span id="status">Converting HBARs...</span></p>
+        <p>Phase 1: Minimal Primitives</p>
+        
+        <div class="card">
+            <h3>1. Content Access (x402)</h3>
+            <button onclick="checkAccess()">Request Access (GET /pay)</button>
+            <button onclick="payAccess()">Pay & Unlock (POST /pay)</button>
+            <pre id="accessStatus">Locked 🔒</pre>
+        </div>
+
+        <div class="card">
+            <h3>2. Watch Events (HCS)</h3>
+            <button onclick="startWatching()">Start Watching (Simulate)</button>
+            <pre id="eventLog">Event Log:
+Waiting...</pre>
+        </div>
     </div>
-    
+
     <script>
-        fetch('/api/health')
-            .then(res => res.json())
-            .then(data => {
-                document.getElementById('status').innerText = '✅ System Online: ' + data.message;
-                document.getElementById('status').style.color = 'green';
-                document.getElementById('status').style.fontWeight = 'bold';
-            })
-            .catch(err => {
-                document.getElementById('status').innerText = '❌ Connection Failed';
-                document.getElementById('status').style.color = 'red';
-            });
+        // Utils
+        const log = (id, msg) => document.getElementById(id).innerText = msg;
+        const appendLog = (id, msg) => document.getElementById(id).innerText += '\n' + msg;
+
+        // 1. Check Access
+        async function checkAccess() {
+            try {
+                const res = await fetch('/api/pay');
+                if (res.status === 402) {
+                    const data = await res.json();
+                    log('accessStatus', `402 Payment Required\nChallenge: Pay ${data.challenge.amount} tinybar to ${data.challenge.recipient}`);
+                } else {
+                    log('accessStatus', 'Unexpected status: ' + res.status);
+                }
+            } catch (err) {
+                log('accessStatus', 'Error: ' + err.message);
+            }
+        }
+
+        // 2. Pay Access
+        async function payAccess() {
+            try {
+                // Mocking a payment proof
+                const res = await fetch('/api/pay', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ proof: 'simulated-proof' }) // In reality, signed tx bytes
+                });
+                const data = await res.json();
+                if (data.success) {
+                    log('accessStatus', `✅ Unlocked! Token: ${data.access_token}\n"${data.message}"`);
+                } else {
+                    log('accessStatus', '❌ Failed: ' + data.error);
+                }
+            } catch (err) {
+                log('accessStatus', 'Error: ' + err.message);
+            }
+        }
+
+        // 3. Watch Events
+        let isWatching = false;
+        async function startWatching() {
+            if (isWatching) return;
+            isWatching = true;
+            appendLog('eventLog', '--- Stream Started ---');
+            
+            setInterval(async () => {
+                try {
+                    const res = await fetch('/api/event', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            eventType: 'watch',
+                            contentId: 'video-demo-1',
+                            timestamp: Date.now()
+                        })
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        appendLog('eventLog', `[${new Date().toLocaleTimeString()}] 📡 Logged to Topic ${data.topicId} (Status: ${data.status})`);
+                    }
+                } catch (err) {
+                    console.error(err);
+                }
+            }, 1000); // Pulse every second
+        }
     </script>
+    <style>
+        .card { background: white; padding: 1rem; margin: 1rem 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: left; }
+        button { background: #007bff; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; margin-right: 0.5rem; }
+        button:hover { background: #0056b3; }
+        pre { background: #333; color: #0f0; padding: 1rem; border-radius: 4px; overflow-x: auto; }
+    </style>
 </body>
 </html>
